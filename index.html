@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <link rel="stylesheet" href="index.css">
+  <title>Ruby Snippets</title>
+</head>
+<body>
+  <span id="top"></span>
+  <div class="sidebar">
+    
+    <a href="#sec1">Anagram</a>
+    <a href="#sec2">Phone Numbers</a>
+    <a href="#sec3">Collatz Conjecture</a>
+    <a href="#sec4">Proverb</a>
+    <a href="#sec5">Palindrome Products</a>
+  </div>
+
+  <div class="content">
+    <h1 class="page-title">Edd's Ruby Snippets</h1>
+    <picture>
+      <a href="https://github.com/casualc0der"><img src="gh.png"/></a>
+    </picture>
+    <section class="section">
+
+      <p>A selection of 5 exercises from the Exercism Ruby <a href="https://exercism.io/tracks/ruby" target="_blank">track</a> </p>
+      <p>Hopefully the preamble provided from the Exercism exercise clarifies the problem to be solved, but I am happy
+        to clarify wherever required! DM's are <a href="https://twitter.com/casualc0der">open</a>
+      </p>
+      <p>Link to the full repo of exercises completed <a href="https://github.com/casualc0der/exercism-ruby">here</a>, and my full Exercism profile is <a href="https://exercism.io/profiles/casualc0der">here</a> </p>
+  
+    </section>
+
+
+
+    <section id="sec1" class="section">
+  <h2 class="subtitle">Anagram</h2>
+  <div class="pre-amble">
+    <p>Given a word and a list of possible anagrams, select the correct sublist.</p>
+
+  <p><em>Example: </em>Given "listen" and a list of candidates like "enlists" "google" "inlets" "banana" the program should return a list containing "inlets".</p>
+
+  </div>
+  <div class="code">
+<pre>
+  <code>
+  class Anagram
+    def initialize(wrd)
+      @word = wrd.downcase.split('')
+    end
+    def match(anagrams)
+      anagrams.select do |e|
+      anagram = e.downcase.split('')
+      anagram.sort == @word.sort && @word != anagram
+      end
+    end
+  end
+  </code>
+</pre>
+
+  </div>
+  <a href="#top">back to top</a>
+    </section>
+
+    <section id="sec2" class="section">
+      <h2 class="subtitle">Phone Numbers</h2>
+      <div class="pre-amble">
+        <p>Clean up user-entered phone numbers so that they can be sent SMS messages.</p>
+
+
+          
+          <p><em>Example: </em> the inputs below should all produce the output
+          
+          6139950253</p>
+            <ul>
+             <li> +1 (613)-995-0253</li>
+             <li> 613-995-0253</li>
+            <li>  1 613 995 0253</li>
+             <li> 613.995.0253</li>
+          </ul>
+        
+    
+      </div>
+      <div class="code">
+    <pre>
+      <code>
+  class PhoneNumber
+    NUM_FORMAT = /1?[2-9][0-9]{2}[2-9][0-9]{6}/
+      def PhoneNumber.clean(x)
+        clean = x.scan(/\w/).join
+        clean.sub!('1', '') if clean[0] == '1'
+        clean.match(NUM_FORMAT) && clean.length < 11 ?
+          clean : nil   
+      end
+    end
+      </code>
+    </pre>
+    
+      </div>
+      <a href="#top">back to top</a>
+        </section>
+
+        <section id="sec3" class="section">
+          <h2 class="subtitle">Collatz Conjecture</h2>
+          <div class="pre-amble">
+        <p>The Collatz Conjecture or 3x+1 problem can be summarized as follows:
+
+          Take any positive integer n. If n is even, divide n by 2 to get n / 2. If n is odd, multiply n by 3 and add 1 to get 3n + 1.</p>
+          
+          <p>Repeat the process indefinitely. The conjecture states that no matter which number you start with, you will always reach 1 eventually.</p>
+          
+          <p><em>Example: </em>Given a number n, return the number of steps required to reach 1.</p>
+          </div>
+          <div class="code">
+        <pre>
+          <code>
+  class CollatzConjecture
+    def self.total
+      @@total = 0
+    end
+    def self.steps(n)
+      raise ArgumentError if n < 1
+      if n != 1
+        n.modulo(2) == 0 ?
+          steps(n/2) : steps(n * 3 + 1)
+        @@total += 1
+      else
+        self.total
+      end
+    end
+  end
+          </code>
+        </pre>
+        
+    </div>
+    <a href="#top">back to top</a>
+  </section>
+  <section id="sec4" class="section">
+    <h2 class="subtitle">Proverb</h2>
+    <div class="pre-amble">
+      <p>For want of a horseshoe nail, a kingdom was lost, or so the saying goes.</p>
+
+      <p>Given a list of inputs, generate the relevant proverb. </p>
+      
+      <p><em>Example: </em> given the list <code> ["nail", "shoe", "horse", "rider", "message", "battle", "kingdom"]</code>, 
+      
+      you will output the full text of this proverbial rhyme:</p>
+      <pre>
+      <code>
+      For want of a nail the shoe was lost.
+      For want of a shoe the horse was lost.
+      For want of a horse the rider was lost.
+      For want of a rider the message was lost.
+      For want of a message the battle was lost.
+      For want of a battle the kingdom was lost.
+      And all for the want of a nail.
+      </code>
+    </pre>
+    </div>
+    <div class="code">
+  <pre>
+    <code>
+  class Proverb
+    def self.new(*args, qualifier: nil)
+      story = []
+      args.each_cons(2) {|words| 
+        story << Story.teller(words) }
+        story << Finish
+          .the_story(args.first, qualifier)
+        story.join("\n")
+    end
+  end
+
+  class Story
+    def self.teller(*speak)
+     word = speak.flatten
+     "For want of a #{word.first} " +
+      "the #{word.last} was lost."
+     end
+  end
+
+   class Finish
+    def self.the_story(word, extra)
+     verse = "And all for the want of a " 
+       extra ? 
+         verse + "#{extra} #{word}." :
+          verse + "#{word}."
+     end
+   end     
+    </code>
+  </pre>
+  
+</div>
+<a href="#top">back to top</a>
+</section>
+<section id="sec5" class="section">
+  <h2 class="subtitle">Palindrome Products</h2>
+  <div class="pre-amble">
+    <p>Detect palindrome products in a given range.</p>
+
+    <p>A palindromic number is a number that remains the same when its digits are reversed. For example, 121 is a palindromic number but 112 is not.</p>
+    
+    <p>Given a range of numbers, find the largest and smallest palindromes which are products of numbers within that range.</p>
+    
+    <p>Your solution should return the largest and smallest palindromes, along with the factors of each within the range. If the largest or smallest palindrome has more than one pair of factors within the range, then return all the pairs.</p>
+  </div>
+  <div class="code">
+<pre>
+  <code>
+  class Palindromes
+    def initialize(min_factor: 1, max_factor: 1)
+      @range = (min_factor..max_factor)
+                  .to_a
+                  .repeated_combination(2)
+                  .to_a
+      end
+    def generate
+      @combos = @range.select {|x|
+         palindromic?(x[0] * x[1]) }
+      @values = @combos.map {|z|
+         z.reduce(:*) }                      
+    end
+    def largest
+      DromeStats.new(@values.max, @combos)
+    end
+    def smallest
+      DromeStats.new(@values.min, @combos)
+    end
+
+    private
+      def palindromic?(x)
+        x.to_s == x.to_s.reverse
+      end
+  end
+
+  class DromeStats 
+    attr_reader :value, :factors
+    def initialize(value, factors)
+      @value = value
+      @factors = factors.select {|z| 
+        z.reduce(:*) == value }
+    end
+  end  
+  </code>
+</pre>
+
+</div>
+<a href="#top">back to top</a>
+</section>
+  <br/>
+      
+  <p style="text-align: center;">Made with ❤️ in London </p>
+  <br/>
+  <br/>
+  </div>
+
+
+</body>
+</html>
